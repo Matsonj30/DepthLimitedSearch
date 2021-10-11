@@ -5,26 +5,28 @@ class Node:
         return Node
 
 def DLS():
-    return RecursiveDLS(Node.InitialState(), 10)
+    return RecursiveDLS(Node.InitialState(), 11)
 
 
-def RecursiveDLS(node, limit): #Returns failure, or curoff reached 
-    if node == (0,0,0,3,3,1):
+def RecursiveDLS(CurrentNode, limit): #Returns failure, or cutoff reached 
+    #print(CurrentNode)
+    if CurrentNode == (0,0,0,3,3,1):
         return "We did eet?" #path to goal
     elif limit == 0:
         return "cutoff"
     else:
         cutoffOccurred = False
-        for action in ACTIONS(node):
-            result = RecursiveDLS(action, limit-1)
+        for possibleNode in ACTIONS(CurrentNode):
+            result = RecursiveDLS(possibleNode, limit-1) ##understand recursive method HERE and waht it means to make result = recursive call
         if result == "cutoff":
             cutoffOccurred = True
         elif result != "failure":
-            print("At the current " + str(node) + " you take the action")
-            if cutoffOccurred == True: 
-                return "cutoff"
-            else:
-                return "failure"
+            print("At the current " + str(CurrentNode) + " you take the action to get to " + str(possibleNode))
+            return "gay"
+        if cutoffOccurred == True: 
+            return "cutoff"
+        else:
+            return "failure"
             
 
 def ACTIONS(node):
@@ -33,14 +35,19 @@ def ACTIONS(node):
     if(node[2]) == 1: #boat is at A
         possibleActions.append((node[0], node[1]-1, 0, node[3], node[4]+1, 1)) #1C
         possibleActions.append((node[0]-1, node[1], 0, node[3]+1, node[4], 1)) #1M
-        possibleActions.append((node[0], node[1]-2, 0, node[3], node[4]+2, 1)) #2C
-        possibleActions.append((node[0]-2, node[1], 0, node[3]+2, node[4], 1)) #2M
-        possibleActions.append((node[0]-1, node[1]-1, 0, node[3]+1, node[4]+1, 1)) #1C1M
+        if(node[1] >= 2):  #make sure there are sufficient people to send over
+            possibleActions.append((node[0], node[1]-2, 0, node[3], node[4]+2, 1)) #2C
+        if(node[0] >= 2):
+            possibleActions.append((node[0]-2, node[1], 0, node[3]+2, node[4], 1)) #2M
+            possibleActions.append((node[0]-1, node[1]-1, 0, node[3]+1, node[4]+1, 1)) #1C1M
+
     else: #boat is at B
         possibleActions.append((node[0], node[1]+1, 1, node[3], node[4]-1, 0)) #1C
         possibleActions.append((node[0]+1, node[1], 1, node[3]-1, node[4], 0)) #1M
-        possibleActions.append((node[0], node[1]+2, 1, node[3], node[4]-2, 0)) #2C
-        possibleActions.append((node[0]+2, node[1], 1, node[3]-2, node[4], 0)) #2M
+        if(node[4] >= 2): #make sure there are sufficient people to send over
+            possibleActions.append((node[0], node[1]+2, 1, node[3], node[4]-2, 0)) #2C
+        if(node[3] >= 2):
+            possibleActions.append((node[0]+2, node[1], 1, node[3]-2, node[4], 0)) #2M
         possibleActions.append((node[0]+1, node[1]+1, 1, node[3]-1, node[4]-1, 0)) #1C1M
     return(findAcceptableStates(possibleActions))
     
@@ -55,5 +62,5 @@ def findAcceptableStates(possibleActions):
                 acceptableStates.append(action)
     return(acceptableStates)
 
-print(ACTIONS((3,1,1,0,2,1)))
-#DLS()
+#print(ACTIONS((3,1,1,0,2,1)))
+DLS()
