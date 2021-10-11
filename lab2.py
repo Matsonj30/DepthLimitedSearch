@@ -4,30 +4,27 @@ class Node:
     def state():
         return Node
 
-    
-
-GoalState = (0,0,0,3,3,1) 
-treeStack = []
 def DLS():
-    return RecursiveDLS(Node.InitialState(), 15)
+    return RecursiveDLS(Node.InitialState(), 10)
 
 
 def RecursiveDLS(node, limit): #Returns failure, or curoff reached 
-    if node == GoalState:
-        return action #path to goal
+    if node == (0,0,0,3,3,1):
+        return "We did eet?" #path to goal
     elif limit == 0:
         return "cutoff"
     else:
-        cutoffOCcurred = False
+        cutoffOccurred = False
         for action in ACTIONS(node):
-            child = node[action]
-            result = RecursiveDLS(child, limit-1)
+            result = RecursiveDLS(action, limit-1)
         if result == "cutoff":
-            cutoffOCcurred = True
-        if cutoffOCcurred == True: 
-            return "cutoff"
-        else:
-            return "failure"
+            cutoffOccurred = True
+        elif result != "failure":
+            print("At the current " + str(node) + " you take the action")
+            if cutoffOccurred == True: 
+                return "cutoff"
+            else:
+                return "failure"
             
 
 def ACTIONS(node):
@@ -45,6 +42,18 @@ def ACTIONS(node):
         possibleActions.append((node[0], node[1]+2, 1, node[3], node[4]-2, 0)) #2C
         possibleActions.append((node[0]+2, node[1], 1, node[3]-2, node[4], 0)) #2M
         possibleActions.append((node[0]+1, node[1]+1, 1, node[3]-1, node[4]-1, 0)) #1C1M
-    return(possibleActions)
+    return(findAcceptableStates(possibleActions))
+    
+## def findAcceptableStates(possibleActions)
+#  determines which states given by ACTIONS() are acceptable
+#  returns tuple of acceptable states
+def findAcceptableStates(possibleActions):  
+    acceptableStates = []
+    for action in possibleActions:
+        if(action[0] == 0 or action[0] >= action[1]): #checking for less cannibals at A
+            if(action[3] == 0 or action[3] >= action[4]): #checking for less cannibals at B
+                acceptableStates.append(action)
+    return(acceptableStates)
 
-print(ACTIONS((2,2,0,1,1,1)))
+print(ACTIONS((3,1,1,0,2,1)))
+#DLS()
