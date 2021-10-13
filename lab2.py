@@ -1,13 +1,8 @@
-class Node:
-    def InitialState():
-        return(3,3,1,0,0,0)
-    def state():
-        return Node
-
 def DLS():
-    return RecursiveDLS(Node.InitialState(), 15)
+    return RecursiveDLS((3,3,1,0,0,0), 15)
 
-
+##def RecursiveDLS(CurrentNode, limit)
+# returns path to solution of Cannibal Missionary puzzle, or cutoff/failure      
 def RecursiveDLS(CurrentNode, limit): #Returns failure, or cutoff reached 
     #print(CurrentNode)
     if CurrentNode == (0,0,0,3,3,1):
@@ -34,7 +29,9 @@ def RecursiveDLS(CurrentNode, limit): #Returns failure, or cutoff reached
         else:
             return "failure"
             
-
+## def actionString(currentNode, possibleNode)
+# look at the current node and a possible node it can go to
+# prints the actions required to reach possibleNode from currentNode
 def actionString(currentNode, possibleNode):
     action = []
     for number in range(6):
@@ -58,7 +55,9 @@ def actionString(currentNode, possibleNode):
     else:
         print(" FROM sideB TO sideA> ", end='')
     
-
+##def ACTIONS(node)
+# given a node, will return all possible nodes states that it can traverse to
+# returns tuple of acceptable states
 def ACTIONS(node):
     possibleActions = []
     #5 actions: 1C, 1M, 2C, 2M, 1C 1M
@@ -91,5 +90,4 @@ def findAcceptableStates(possibleActions):
             if(action[3] == 0 or action[3] >= action[4]): #checking for less cannibals at B
                 acceptableStates.append(action)
     return(acceptableStates)
-
 DLS()
