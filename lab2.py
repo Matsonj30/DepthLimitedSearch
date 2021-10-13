@@ -5,29 +5,59 @@ class Node:
         return Node
 
 def DLS():
-    return RecursiveDLS(Node.InitialState(), 11)
+    return RecursiveDLS(Node.InitialState(), 15)
 
 
 def RecursiveDLS(CurrentNode, limit): #Returns failure, or cutoff reached 
     #print(CurrentNode)
     if CurrentNode == (0,0,0,3,3,1):
-        return "We did eet?" #path to goal
+        return "goal" #path to goal
     elif limit == 0:
         return "cutoff"
     else:
         cutoffOccurred = False
         for possibleNode in ACTIONS(CurrentNode):
-            result = RecursiveDLS(possibleNode, limit-1) ##understand recursive method HERE and waht it means to make result = recursive call
-        if result == "cutoff":
-            cutoffOccurred = True
-        elif result != "failure":
-            print("At the current " + str(CurrentNode) + " you take the action to get to " + str(possibleNode))
-            return "gay"
+            result = RecursiveDLS(possibleNode, limit-1) 
+            if result == "cutoff":
+                cutoffOccurred = True
+            elif result != "failure":
+                print("At the current " + str(CurrentNode) + " you take the action ", end='')
+                actionString(CurrentNode, possibleNode)
+                print("to get to " + str(possibleNode), end='')
+                if(possibleNode == (0,0,0,3,3,1)):
+                    print("(GOAL)")
+                else:
+                    print("")
+                return result
         if cutoffOccurred == True: 
-            return "cutoff"
+             return "cutoff"
         else:
             return "failure"
             
+
+def actionString(currentNode, possibleNode):
+    action = []
+    for number in range(6):
+       action.append(possibleNode[number] - currentNode[number])
+
+    if (action[0] < 0 and action[1] < 0): # moving missionaries and cannibals
+       print("<MOVE " + str(abs(action[0])) + " missionary and " + str(abs(action[1])) + " cannibals", end='')
+    elif (action[3] < 0 and action[4] < 0): # moving missionaries and cannibals
+        print("<MOVE " + str(abs(action[3])) + " missionary and " + str(abs(action[4])) + " cannibals", end='')
+    else:     
+        if(action[0] < 0): #missionaries being moved over
+            print("<MOVE " + str(abs(action[0])) + " missionaries", end='')
+        if(action[1] < 0):
+            print("<MOVE " + str(abs(action[1])) + " cannibals", end='')
+        if(action[3] < 0):
+            print("<MOVE " + str(abs(action[0])) + " missionaries", end='')
+        if(action[4] < 0):
+            print("<MOVE " + str(abs(action[1])) + " cannibals", end='')
+    if(action[2] < 0):
+        print(" FROM sideA TO sideB> ", end='')
+    else:
+        print(" FROM sideB TO sideA> ", end='')
+    
 
 def ACTIONS(node):
     possibleActions = []
@@ -62,5 +92,4 @@ def findAcceptableStates(possibleActions):
                 acceptableStates.append(action)
     return(acceptableStates)
 
-#print(ACTIONS((3,1,1,0,2,1)))
 DLS()
